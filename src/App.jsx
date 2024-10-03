@@ -28,7 +28,9 @@ export default function App() {
 
   const handleUpdate = () => {
     setNotes(
-      notes.map((note) => (note.id === editingId ? { ...note, val: editingValue } : note))
+      notes.map((note) => (
+        note.id === editingId ? { ...note, val: editingValue } : note
+      ))
     );
     setEditingId(null);
     setEditingValue("");
@@ -37,6 +39,12 @@ export default function App() {
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleAdd();
+    }
+  };
+
+  const handleKeyPress2 = (e) => {
+    if (e.key === "Enter") {
+      handleUpdate()
     }
   };
 
@@ -75,6 +83,7 @@ export default function App() {
                       <input
                         value={editingValue}
                         onChange={(e) => setEditingValue(e.target.value)}
+                        onKeyDown={handleKeyPress2}
                         className="pl-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 border-2 border-emerald-400 text-black font-semibold"
                       />
                       <button
