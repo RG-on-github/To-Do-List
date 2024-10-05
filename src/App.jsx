@@ -10,7 +10,7 @@ export default function App() {
   const length = useRef(notes.length);
 
   const handleAdd = () => {
-    const newArr = [...notes, { id: id, val: point }];
+    const newArr = [...notes, { id: id, val: point, checked : false }];
     setNotes(newArr);
     setPoint("");
     id++;
@@ -19,6 +19,7 @@ export default function App() {
 
   const handleDelete = (id) => {
     setNotes(notes.filter((note) => note.id !== id));
+    length.current--
   };
 
   const handleEdit = (id, value) => {
@@ -48,6 +49,14 @@ export default function App() {
     }
   };
 
+  const handleCheck = (id) => {
+    setNotes(
+      notes.map((note) => (
+        note.id === id ? { ...note, checked: !note.checked } : note
+      ))
+    );
+  };
+
   useEffect(() => {
     if (point.length > 15) {
       alert("Max Characters");
@@ -74,43 +83,46 @@ export default function App() {
           </button>
         </div>
         {length.current === 0 ? null : (
-          <div className="bg-red-300 min-w-[50vw] mt-8 flex flex-col rounded-md font-bold">
+          <div className="bg-red-300 min-w-[60vw] mt-8 flex flex-col rounded-md font-bold">
             <ul className="list-decimal py-5 flex flex-col items-center space-y-4">
               {notes.map((note) => (
-                <li key={note.id}>
-                  {editingId === note.id ? (
-                    <div>
-                      <input
-                        value={editingValue}
-                        onChange={(e) => setEditingValue(e.target.value)}
-                        onKeyDown={handleKeyPress2}
-                        className="pl-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 border-2 border-emerald-400 text-black font-semibold"
-                      />
-                      <button
-                        onClick={handleUpdate}
-                        className="bg-black text-white hover:bg-white hover:text-black rounded-md px-2 mx-4"
-                      >
-                        Save
-                      </button>
-                    </div>
-                  ) : (
-                    <div>
-                      {note.val}
-                      <button
-                        className="bg-black text-white hover:bg-white hover:text-black rounded-md px-2 mx-4"
-                        onClick={() => handleEdit(note.id, note.val)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(note.id)}
-                        className="bg-black text-white hover:bg-white hover:text-black rounded-md px-2"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </li>
+                <div className="flex space-x-8">
+                  <input type="checkbox" onClick={() => handleCheck(note.id)}/>
+                  <li key={note.id}>
+                    {editingId === note.id ? (
+                      <div>
+                        <input
+                          value={editingValue}
+                          onChange={(e) => setEditingValue(e.target.value)}
+                          onKeyDown={handleKeyPress2}
+                          className="pl-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 border-2 border-emerald-400 text-black font-semibold"
+                        />
+                        <button
+                          onClick={handleUpdate}
+                          className="bg-black text-white hover:bg-white hover:text-black rounded-md px-2 mx-4"
+                        >
+                          Save
+                        </button>
+                      </div>
+                    ) : (
+                      <div className={`${note.checked ? "line-through" : ""}`}>
+                        {note.val}
+                        <button
+                          className="bg-black text-white hover:bg-white hover:text-black rounded-md px-2 mx-4"
+                          onClick={() => handleEdit(note.id, note.val)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(note.id)}
+                          className="bg-black text-white hover:bg-white hover:text-black rounded-md px-2"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </li>
+                </div>
               ))}
             </ul>
           </div>
